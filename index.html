@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>健康知識小站</title>
+  <style>
+    :root{
+      --bg:#f4f8fb;
+      --card:#ffffff;
+      --primary:#1f6feb;
+      --primary-soft:#e8f1ff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --success:#0f9d58;
+      --warn:#d97706;
+      --danger:#dc2626;
+      --border:#dbe4ee;
+      --shadow:0 10px 30px rgba(0,0,0,.08);
+      --radius:20px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"Segoe UI","Noto Sans TC",Arial,sans-serif;
+      background:linear-gradient(180deg,#eef6ff 0%, #f9fbfd 100%);
+      color:var(--text);
+    }
+    .container{
+      max-width:1200px;
+      margin:0 auto;
+      padding:24px;
+    }
+    .hero{
+      background:linear-gradient(135deg,#1f6feb,#4f9cff);
+      color:#fff;
+      border-radius:28px;
+      padding:32px;
+      box-shadow:var(--shadow);
+      display:grid;
+      grid-template-columns:1.4fr 1fr;
+      gap:20px;
+      align-items:center;
+    }
+    .hero h1{
+      margin:0 0 12px;
+      font-size:clamp(30px,4vw,44px);
+      line-height:1.2;
+    }
+    .hero p{
+      margin:0;
+      font-size:16px;
+      line-height:1.8;
+      opacity:.95;
+    }
+    .hero-badge{
+      display:inline-block;
+      background:rgba(255,255,255,.18);
+      padding:8px 14px;
+      border-radius:999px;
+      margin-bottom:14px;
+      font-size:14px;
+    }
+    .hero-panel{
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:22px;
+      padding:22px;
+      backdrop-filter: blur(8px);
+    }
+    .hero-panel h3{margin:0 0 10px;font-size:20px}
+    .grid{
+      display:grid;
+      grid-template-columns:300px 1fr;
+      gap:24px;
+      margin-top:24px;
+    }
+    .panel, .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+    .panel{
+      padding:20px;
+      position:sticky;
+      top:20px;
+      height:fit-content;
+    }
+    .section-title{
+      margin:0 0 14px;
+      font-size:20px;
+    }
+    .muted{color:var(--muted)}
+    .search{
+      width:100%;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      font-size:15px;
+      margin-bottom:14px;
+      outline:none;
+    }
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:18px;
+    }
+    .chip{
+      border:none;
+      cursor:pointer;
+      padding:10px 14px;
+      border-radius:999px;
+      background:#eef2f7;
+      color:#334155;
+      font-size:14px;
+      transition:.2s;
+    }
+    .chip.active, .chip:hover{
+      background:var(--primary);
+      color:#fff;
+    }
+    .content{
+      display:grid;
+      gap:20px;
+    }
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:18px;
+    }
+    .card{
+      padding:18px;
+      transition:transform .18s ease, box-shadow .18s ease;
+    }
+    .card:hover{
+      transform:translateY(-4px);
+    }
+    .tag{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      background:var(--primary-soft);
+      color:var(--primary);
+      margin-bottom:12px;
+      font-weight:600;
+    }
+    .card h3{
+      margin:0 0 8px;
+      font-size:20px;
+    }
+    .card p{
+      margin:0 0 14px;
+      color:var(--muted);
+      line-height:1.7;
+    }
+    .point{
+      background:#f8fafc;
+      border-left:4px solid var(--primary);
+      padding:12px;
+      border-radius:12px;
+      font-size:14px;
+      line-height:1.7;
+    }
+    .tools{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:18px;
+    }
+    .tool-card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:20px;
+    }
+    .tool-card h3{
+      margin-top:0;
+      margin-bottom:12px;
+    }
+    .field{
+      display:grid;
+      gap:8px;
+      margin-bottom:12px;
+    }
+    label{
+      font-weight:600;
+      font-size:14px;
+    }
+    input, select{
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      font-size:15px;
+    }
+    button.primary{
+      border:none;
+      background:var(--primary);
+      color:#fff;
+      padding:12px 16px;
+      border-radius:14px;
+      cursor:pointer;
+      font-size:15px;
+      font-weight:600;
+    }
+    button.primary:hover{filter:brightness(.98)}
+    .result{
+      margin-top:12px;
+      background:#f8fafc;
+      border:1px dashed var(--border);
+      border-radius:14px;
+      padding:12px;
+      line-height:1.7;
+    }
+    .quiz-option{
+      display:block;
+      width:100%;
+      text-align:left;
+      margin:10px 0;
+      border:1px solid var(--border);
+      background:#fff;
+      border-radius:14px;
+      padding:12px 14px;
+      cursor:pointer;
+      font-size:15px;
+    }
+    .quiz-option:hover{
+      border-color:var(--primary);
+      background:#f7fbff;
+    }
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px;
+      margin-top:18px;
+    }
+    .stat{
+      background:rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:18px;
+      padding:14px;
+    }
+    .stat strong{
+      display:block;
+      font-size:24px;
+      margin-bottom:6px;
+    }
+    .footer{
+      text-align:center;
+      color:var(--muted);
+      padding:24px 0 10px;
+      font-size:14px;
+    }
+    @media (max-width: 900px){
+      .hero{grid-template-columns:1fr}
+      .grid{grid-template-columns:1fr}
+      .panel{position:static}
+      .stats{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div>
+        <div class="hero-badge">健康知識互動 App</div>
+        <h1>健康知識小站</h1>
+        <p>
+          將常見健康知識、日常自我照護、BMI 計算與互動測驗整合於同一頁面，
+          便於教學、宣導與自我學習。內容力求深入淺出，讓使用者循序漸進、觸類旁通。
+        </p>
+        <div class="stats">
+          <div class="stat">
+            <strong id="stat-articles">6</strong>
+            <span>健康主題</span>
+          </div>
+          <div class="stat">
+            <strong>1</strong>
+            <span>BMI 工具</span>
+          </div>
+          <div class="stat">
+            <strong>3</strong>
+            <span>互動測驗題</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <h3>今日健康提醒</h3>
+        <p id="daily-tip" style="line-height:1.9;margin:0;">
+          保持規律作息、均衡飲食與適度運動，往往是健康維持的根本之道。
+        </p>
+      </div>
+    </section>
+
+    <div class="grid">
+      <aside class="panel">
+        <h2 class="section-title">主題查找</h2>
+        <input id="searchInput" class="search" type="text" placeholder="輸入關鍵字，例如：飲食、睡眠、運動" />
+        <div class="chips" id="categoryChips"></div>
+        <p class="muted">可依主題或關鍵字快速篩選健康知識卡片。</p>
+      </aside>
+
+      <main class="content">
+        <section>
+          <h2 class="section-title">健康知識卡</h2>
+          <div class="cards" id="knowledgeCards"></div>
+        </section>
+
+        <section>
+          <h2 class="section-title">互動工具</h2>
+          <div class="tools">
+            <div class="tool-card">
+              <h3>BMI 計算器</h3>
+              <div class="field">
+                <label for="height">身高（公分）</label>
+                <input id="height" type="number" placeholder="例如 170" />
+              </div>
+              <div class="field">
+                <label for="weight">體重（公斤）</label>
+                <input id="weight" type="number" placeholder="例如 65" />
+              </div>
+              <button class="primary" onclick="calculateBMI()">開始計算</button>
+              <div class="result" id="bmiResult">請輸入身高與體重後進行計算。</div>
+            </div>
+
+            <div class="tool-card">
+              <h3>每日飲水建議</h3>
+              <div class="field">
+                <label for="waterWeight">體重（公斤）</label>
+                <input id="waterWeight" type="number" placeholder="例如 60" />
+              </div>
+              <button class="primary" onclick="calculateWater()">估算建議量</button>
+              <div class="result" id="waterResult">一般可先以每公斤體重約 30–35 ml 作為估算基準。</div>
+            </div>
+
+            <div class="tool-card">
+              <h3>健康知識小測驗</h3>
+              <div id="quizBox"></div>
+              <div class="result" id="quizResult">請先作答，系統會立即顯示結果。</div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="footer">
+      本 App 僅供健康教育與一般知識參考；如有身體不適，仍應諮詢醫療專業人員。
+    </div>
+  </div>
+
+  <script>
+    const knowledgeData = [
+      {
+        category: "飲食",
+        title: "均衡飲食的重要性",
+        desc: "均衡飲食應涵蓋全穀雜糧、豆魚蛋肉、乳品、蔬菜、水果與油脂堅果種子，以維持身體機能與營養平衡。",
+        point: "重點提醒：與其偏食，不如多元攝取；少油、少糖、少鹽，往往事半功倍。"
+      },
+      {
+        category: "運動",
+        title: "規律運動與健康",
+        desc: "規律運動可促進心肺功能、控制體重、提升情緒，並降低慢性疾病風險。建議每週至少進行 150 分鐘中等強度運動。",
+        point: "重點提醒：快走、騎腳踏車、游泳、跳舞等，皆可因地制宜、循序漸進。"
+      },
+      {
+        category: "睡眠",
+        title: "睡眠不足的影響",
+        desc: "長期睡眠不足可能影響注意力、記憶、免疫力與情緒，甚至增加代謝異常風險。",
+        point: "重點提醒：固定作息、睡前減少藍光刺激、避免過晚飲用含咖啡因飲品。"
+      },
+      {
+        category: "心理健康",
+        title: "壓力管理與情緒照護",
+        desc: "壓力並非全然有害，但若長期累積而未妥善調適，可能影響身心健康。可透過運動、傾訴、正念或休閒活動紓壓。",
+        point: "重點提醒：學會求助並非示弱，而是未雨綢繆、善盡自我照護。"
+      },
+      {
+        category: "飲水",
+        title: "足量飲水的好處",
+        desc: "水分有助於體溫調節、代謝、循環與排泄。若飲水不足，可能出現口渴、疲倦、注意力下降等情形。",
+        point: "重點提醒：可透過隨身水瓶、定時提醒等方式建立飲水習慣。"
+      },
+      {
+        category: "預防保健",
+        title: "定期健康檢查",
+        desc: "定期健康檢查有助於早期發現異常、及早介入。不同年齡與風險族群，建議之檢查項目可能不同。",
+        point: "重點提醒：預防勝於治療，及早掌握健康狀況，方能防微杜漸。"
+      }
+    ];
+
+    const quizData = [
+      {
+        question: "下列何者最符合一般健康促進建議？",
+        options: ["每天久坐超過 10 小時", "每週進行規律中等強度運動", "用含糖飲料取代白開水"],
+        answer: 1,
+        explain: "規律運動是健康促進的重要基礎。"
+      },
+      {
+        question: "若長期睡眠不足，較可能出現何種影響？",
+        options: ["精神更集中", "免疫力提升", "注意力下降與情緒波動"],
+        answer: 2,
+        explain: "睡眠不足常影響注意力、情緒與身體恢復。"
+      },
+      {
+        question: "下列哪一項較屬均衡飲食原則？",
+        options: ["只吃肉不吃菜", "多元攝取六大類食物", "以零食取代正餐"],
+        answer: 1,
+        explain: "均衡飲食強調多元與適量，而非偏食。"
+      }
+    ];
+
+    const tips = [
+      "飯後散步 10 到 15 分鐘，有助於培養活動習慣。",
+      "將含糖飲料逐步改為白開水或無糖茶，可減少額外糖分攝取。",
+      "每天固定睡眠與起床時間，有助於建立穩定生理時鐘。",
+      "長時間工作或讀書時，每 30 至 60 分鐘起身活動一下。",
+      "健康管理貴在持之以恆，不必一蹴可幾，循序漸進即可。"
+    ];
+
+    const categories = ["全部", ...new Set(knowledgeData.map(item => item.category))];
+    let selectedCategory = "全部";
+
+    const cardsEl = document.getElementById("knowledgeCards");
+    const chipsEl = document.getElementById("categoryChips");
+    const searchInput = document.getElementById("searchInput");
+
+    document.getElementById("daily-tip").textContent = tips[Math.floor(Math.random() * tips.length)];
+
+    function renderChips() {
+      chipsEl.innerHTML = "";
+      categories.forEach(cat => {
+        const btn = document.createElement("button");
+        btn.className = "chip" + (cat === selectedCategory ? " active" : "");
+        btn.textContent = cat;
+        btn.onclick = () => {
+          selectedCategory = cat;
+          renderChips();
+          renderCards();
+        };
+        chipsEl.appendChild(btn);
+      });
+    }
+
+    function renderCards() {
+      const keyword = searchInput.value.trim().toLowerCase();
+      const filtered = knowledgeData.filter(item => {
+        const hitCategory = selectedCategory === "全部" || item.category === selectedCategory;
+        const text = `${item.category} ${item.title} ${item.desc} ${item.point}`.toLowerCase();
+        const hitKeyword = text.includes(keyword);
+        return hitCategory && hitKeyword;
+      });
+
+      cardsEl.innerHTML = "";
+      if (!filtered.length) {
+        cardsEl.innerHTML = `<div class="card"><h3>查無資料</h3><p>請更換關鍵字或主題分類。</p></div>`;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="tag">${item.category}</div>
+          <h3>${item.title}</h3>
+          <p>${item.desc}</p>
+          <div class="point">${item.point}</div>
+        `;
+        cardsEl.appendChild(card);
+      });
+      document.getElementById("stat-articles").textContent = filtered.length;
+    }
+
+    searchInput.addEventListener("input", renderCards);
+
+    function calculateBMI() {
+      const height = parseFloat(document.getElementById("height").value);
+      const weight = parseFloat(document.getElementById("weight").value);
+      const result = document.getElementById("bmiResult");
+
+      if (!height || !weight || height <= 0 || weight <= 0) {
+        result.textContent = "請輸入有效的身高與體重數值。";
+        return;
+      }
+
+      const meter = height / 100;
+      const bmi = weight / (meter * meter);
+      let category = "";
+
+      if (bmi < 18.5) category = "體重過輕";
+      else if (bmi < 24) category = "正常範圍";
+      else if (bmi < 27) category = "過重";
+      else if (bmi < 30) category = "輕度肥胖";
+      else if (bmi < 35) category = "中度肥胖";
+      else category = "重度肥胖";
+
+      result.innerHTML = `您的 BMI 為 <strong>${bmi.toFixed(1)}</strong>，判定為：<strong>${category}</strong>。<br>此為一般性參考，仍應結合腰圍、體脂與個人健康狀況綜合評估。`;
+    }
+
+    function calculateWater() {
+      const weight = parseFloat(document.getElementById("waterWeight").value);
+      const result = document.getElementById("waterResult");
+
+      if (!weight || weight <= 0) {
+        result.textContent = "請輸入有效的體重數值。";
+        return;
+      }
+
+      const low = Math.round(weight * 30);
+      const high = Math.round(weight * 35);
+
+      result.innerHTML = `依一般估算法，您每日可先參考飲水量約為 <strong>${low}–${high} ml</strong>。<br>若天氣炎熱、活動量較高或有特殊疾病狀況，仍應視情況調整。`;
+    }
+
+    let quizIndex = 0;
+    let score = 0;
+
+    function renderQuiz() {
+      const box = document.getElementById("quizBox");
+      const q = quizData[quizIndex];
+      if (!q) {
+        box.innerHTML = `<h4>測驗完成</h4><p>您的得分為 ${score} / ${quizData.length}。</p><button class="primary" onclick="restartQuiz()">重新測驗</button>`;
+        document.getElementById("quizResult").innerHTML = "全部作答完畢，已顯示總分。";
+        return;
+      }
+
+      box.innerHTML = `<h4>${quizIndex + 1}. ${q.question}</h4>`;
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "quiz-option";
+        btn.textContent = opt;
+        btn.onclick = () => answerQuiz(idx);
+        box.appendChild(btn);
+      });
+    }
+
+    function answerQuiz(choice) {
+      const q = quizData[quizIndex];
+      const result = document.getElementById("quizResult");
+
+      if (choice === q.answer) {
+        score++;
+        result.innerHTML = `答對了。${q.explain}`;
+      } else {
+        result.innerHTML = `本題答錯。正確答案是：<strong>${q.options[q.answer]}</strong>。${q.explain}`;
+      }
+
+      quizIndex++;
+      setTimeout(renderQuiz, 400);
+    }
+
+    function restartQuiz() {
+      quizIndex = 0;
+      score = 0;
+      document.getElementById("quizResult").textContent = "請先作答，系統會立即顯示結果。";
+      renderQuiz();
+    }
+
+    renderChips();
+    renderCards();
+    renderQuiz();
+  </script>
+</body>
+</html>
